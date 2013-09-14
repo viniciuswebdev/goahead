@@ -16,10 +16,10 @@ func (database Database) FindShortenerUrlByHash(hash string) string {
 	}
 	defer db.Close()
 
-	var name string
-	err = db.QueryRow("SELECT url FROM shortened_url WHERE hash = '" + hash + "'").Scan(&name)
+	var url string
+	err = db.QueryRow("SELECT url FROM shortened_url WHERE hash = '" + hash + "'").Scan(&url)
 	if err != nil {
 		panic(err.Error())
 	}
-	return name
+	return url
 }
