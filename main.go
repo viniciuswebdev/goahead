@@ -22,7 +22,11 @@ type Config struct {
 var _cfg Config
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	db := database.Database{_cfg.Mysql.User, _cfg.Mysql.Password, _cfg.Mysql.Database}
+	db := new(database.Database)
+    db.User = _cfg.Mysql.User
+    db.Password = _cfg.Mysql.Password
+    db.Database = _cfg.Mysql.Database
+
 	http.Redirect(w, r, db.FindShortenerUrlByHash(r.URL.Path[1:]), 301)
 }
 
@@ -36,7 +40,7 @@ func main() {
     }
 
 	http.HandleFunc("/", handler)
-	log.Printf("Starting Goahead on localhost:%s...\n", _cfg.General.Port)
+	log.Printf("Starting Goahead on localhost:%s ...\n", _cfg.General.Port)
     err = http.ListenAndServe(":"+_cfg.General.Port, nil)
     if err != nil {
         panic(err.Error())
