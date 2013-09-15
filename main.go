@@ -8,25 +8,19 @@ import (
     "log"
 )
 
+
+
 type Config struct {
     General struct {
         Port string 
     }
-    Mysql struct {
-		User     string
-		Password string
-		Database string
-	}
+    Mysql database.DatabaseConf 
 }
 
 var _cfg Config
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	db := new(database.Database)
-    db.User = _cfg.Mysql.User
-    db.Password = _cfg.Mysql.Password
-    db.Database = _cfg.Mysql.Database
-
+	db := database.Create(&(_cfg.Mysql))
 	http.Redirect(w, r, db.FindShortenerUrlByHash(r.URL.Path[1:]), 301)
 }
 
