@@ -5,9 +5,13 @@ import (
 	"code.google.com/p/gcfg"
 	"net/http"
     "flag"
+    "log"
 )
 
 type Config struct {
+    General struct {
+        Port string 
+    }
     Mysql struct {
 		User     string
 		Password string
@@ -32,5 +36,9 @@ func main() {
     }
 
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":9000", nil)
+	log.Printf("Starting Goahead on localhost:%s...\n", _cfg.General.Port)
+    err = http.ListenAndServe(":"+_cfg.General.Port, nil)
+    if err != nil {
+        panic(err.Error())
+    }
 }

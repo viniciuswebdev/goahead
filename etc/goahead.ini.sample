@@ -1,3 +1,6 @@
+[general]
+port = 9000 
+
 [mysql]
 user = root
 password = abc123
