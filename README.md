@@ -8,7 +8,7 @@ code.google.com/p/gcfg
 
 
 ### Usage
-Copy the etc/goahead.ini.sample to /goahead.ini, edit it to use your database and persons informations.  
+Copy the etc/goahead.ini.sample to etc/goahead.ini, edit it to use your database and persons informations.  
 1. Compile gohead with `go build`.  
 2. Run it with `goahead` 
 
