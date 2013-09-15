@@ -8,25 +8,29 @@ import (
 )
 
 type Config struct {
-	Mysql struct {
+    Mysql struct {
 		User     string
 		Password string
 		Database string
 	}
 }
 
+var _cfg Config
+
 func handler(w http.ResponseWriter, r *http.Request) {
-    configFilePath := flag.String("config", "goahead.cfg", "Configuration file path")
-    flag.Parse()
-
-    var cfg Config
-    gcfg.ReadFileInto(&cfg, *configFilePath)
-
-	db := database.Database{cfg.Mysql.User, cfg.Mysql.Password, cfg.Mysql.Database}
+	db := database.Database{_cfg.Mysql.User, _cfg.Mysql.Password, _cfg.Mysql.Database}
 	http.Redirect(w, r, db.FindShortenerUrlByHash(r.URL.Path[1:]), 301)
 }
 
 func main() {
+    configFilePath := flag.String("config", "./etc/goahead.ini", "Configuration file path")
+    flag.Parse()
+    
+    err := gcfg.ReadFileInto(&_cfg, *configFilePath)
+    if err != nil {
+        panic(err.Error())
+    }
+
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":9000", nil)
 }
