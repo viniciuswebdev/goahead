@@ -1,16 +1,16 @@
 package database
-  
-import(
+
+import (
 	"database/sql"
-    _ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type Database struct {
-    User, Password, Database string
+	User, Password, Database string
 }
 
 func (database Database) FindShortenerUrlByHash(hash string) string {
- 	db, err := sql.Open("mysql", database.User + ":" + database.Password + "@/" + database.Database)
+	db, err := sql.Open("mysql", database.User+":"+database.Password+"@/"+database.Database)
 	if err != nil {
 		panic(err.Error())
 	}
