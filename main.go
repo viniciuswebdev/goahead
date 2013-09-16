@@ -20,8 +20,16 @@ type Config struct {
 var _cfg Config
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	db := database.Create(&(_cfg.Mysql))
-	http.Redirect(w, r, db.FindShortenerUrlByHash(r.URL.Path[1:]), 301)
+    hash := r.URL.Path[1:]
+    log.Printf("Searching url with hash '%s' \n", hash)
+	
+    db := database.Create(&(_cfg.Mysql))
+    url, error := db.FindShortenerUrlByHash(hash)
+    if error != nil {
+        http.NotFound(w, r)
+        return 
+    }
+	http.Redirect(w, r, url, http.StatusMovedPermanently)
 }
 
 func main() {
