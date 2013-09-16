@@ -6,9 +6,9 @@ import (
 )
 
 type DatabaseConf struct {
-    User     string
-    Password string
-    Database string
+	User     string
+	Password string
+	Database string
 }
 
 type Database struct {
@@ -25,17 +25,17 @@ func (database *Database) FindShortenerUrlByHash(hash string) (string, error) {
 	var url string
 	err = db.QueryRow("SELECT url FROM shortened_url WHERE hash = '" + hash + "'").Scan(&url)
 	if err != nil {
-		// no rows matched! Returns 404 
+		// no rows matched! Returns 404
 		return url, err
 	}
-	return url, nil 
+	return url, nil
 }
 
 func Create(conf *DatabaseConf) *Database {
 	db := new(Database)
 	db.User = conf.User
-    db.Password = conf.Password
-    db.Database = conf.Database
+	db.Password = conf.Password
+	db.Database = conf.Database
 
-    return db
+	return db
 }
