@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/vinicius/goahead/database"
 	"code.google.com/p/gcfg"
 	"flag"
+	"github.com/viniciuswebdev/goahead/database"
 	"log"
 	"net/http"
 )
