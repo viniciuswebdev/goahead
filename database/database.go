@@ -15,7 +15,11 @@ type Database struct {
 	User, Password, Database string
 }
 
-func (database *Database) FindShortenerUrlByHash(hash string) (string, error) {
+type TableConf struct {
+	Name, Hash, Url string
+}
+
+func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableConf) (string, error) {
 	db, err := sql.Open("mysql", database.User+":"+database.Password+"@/"+database.Database)
 	if err != nil {
 		panic(err.Error())
@@ -23,7 +27,7 @@ func (database *Database) FindShortenerUrlByHash(hash string) (string, error) {
 	defer db.Close()
 
 	var url string
-	err = db.QueryRow("SELECT url FROM shortened_url WHERE hash = '" + hash + "'").Scan(&url)
+	err = db.QueryRow("SELECT " + tableConf.Url + " FROM " + tableConf.Name + " WHERE " + tableConf.Hash + " = '" + hash + "'").Scan(&url)
 	if err != nil {
 		// no rows matched! Returns 404
 		return url, err

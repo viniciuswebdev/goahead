@@ -5,3 +5,8 @@ port = 9000
 user = root
 password = abc123
 database = zocprint
+
+[table]
+url = url
+hash = hash
+name = shortened_url
