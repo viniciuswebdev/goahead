@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./database"
+	"github.com/vinicius/goahead/database"
 	"code.google.com/p/gcfg"
 	"flag"
 	"log"
