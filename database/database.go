@@ -1,15 +1,13 @@
 package database
 
 import (
+	"errors"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type DatabaseConf struct {
-	Driver string 
-	User     string
-	Password string
-	Name string
+	Driver,	User, Password, Name string
 }
 
 type Database struct {
@@ -19,6 +17,8 @@ type Database struct {
 type TableConf struct {
 	Name, Hash, Url string
 }
+
+var drivers = []string{"mysql", "sqlite3"}
 
 func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableConf) (string, error) {
 	db, err := sql.Open(database.Driver, database.User+":"+database.Password+"@/"+database.Name)
@@ -30,11 +30,28 @@ func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableCo
 	var url string
 	err = db.QueryRow("SELECT " + tableConf.Url + " FROM " + tableConf.Name + " WHERE " + tableConf.Hash + " = ?", hash).Scan(&url)
 	if err != nil {
-		// no rows matched! Returns 404
 		return url, err
 	}
 	return url, nil
 }
+
+func (database *Database) IsValid() error{
+	var isOk = false
+
+	for _, driver:= range drivers{
+		if database.Driver == driver {
+			isOk = true 
+			break
+		}
+	}
+
+	if !isOk {
+		return errors.New("Driver "+database.Driver+" is not supported.")
+	}
+
+	return nil 
+}
+
 
 func Create(conf *DatabaseConf) *Database {
 	db := new(Database)
@@ -45,3 +62,4 @@ func Create(conf *DatabaseConf) *Database {
 
 	return db
 }
+

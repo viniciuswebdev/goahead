@@ -17,13 +17,13 @@ type Config struct {
 }
 
 var _cfg Config
+var _db *database.Database
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	hash := r.URL.Path[1:]
 	log.Printf("Searching url with hash '%s' \n", hash)
 
-	db := database.Create(&(_cfg.Database))
-	url, error := db.FindShortenerUrlByHash(hash, &(_cfg.Table))
+	url, error := _db.FindShortenerUrlByHash(hash, &(_cfg.Table))
 	if error != nil {
 		http.NotFound(w, r)
 		return
@@ -36,6 +36,11 @@ func main() {
 	flag.Parse()
 
 	err := gcfg.ReadFileInto(&_cfg, *configFilePath)
+	if err != nil {
+		panic(err.Error())
+	}
+	_db = database.Create(&(_cfg.Database))
+	err = _db.IsValid() 
 	if err != nil {
 		panic(err.Error())
 	}
