@@ -12,7 +12,7 @@ type Config struct {
 	General struct {
 		Port string
 	}
-	Mysql database.DatabaseConf
+	Database database.DatabaseConf
 	Table database.TableConf
 }
 
@@ -22,7 +22,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	hash := r.URL.Path[1:]
 	log.Printf("Searching url with hash '%s' \n", hash)
 
-	db := database.Create(&(_cfg.Mysql))
+	db := database.Create(&(_cfg.Database))
 	url, error := db.FindShortenerUrlByHash(hash, &(_cfg.Table))
 	if error != nil {
 		http.NotFound(w, r)

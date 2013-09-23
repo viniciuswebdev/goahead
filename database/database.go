@@ -6,13 +6,14 @@ import (
 )
 
 type DatabaseConf struct {
+	Driver string 
 	User     string
 	Password string
-	Database string
+	Name string
 }
 
 type Database struct {
-	User, Password, Database string
+	Driver, User, Password, Name string
 }
 
 type TableConf struct {
@@ -20,7 +21,7 @@ type TableConf struct {
 }
 
 func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableConf) (string, error) {
-	db, err := sql.Open("mysql", database.User+":"+database.Password+"@/"+database.Database)
+	db, err := sql.Open(database.Driver, database.User+":"+database.Password+"@/"+database.Name)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -37,9 +38,10 @@ func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableCo
 
 func Create(conf *DatabaseConf) *Database {
 	db := new(Database)
+	db.Driver = conf.Driver 
 	db.User = conf.User
 	db.Password = conf.Password
-	db.Database = conf.Database
+	db.Name = conf.Name
 
 	return db
 }
