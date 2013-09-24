@@ -3,15 +3,17 @@ package database
 import (
 	"errors"
 	"database/sql"
+	"log"
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type DatabaseConf struct {
-	Driver,	User, Password, Name string
+	Driver,	User, Password, Name, Path string
 }
 
 type Database struct {
-	Driver, User, Password, Name string
+	Driver, User, Password, Name, Path, dataSource string
 }
 
 type TableConf struct {
@@ -21,7 +23,7 @@ type TableConf struct {
 var drivers = []string{"mysql", "sqlite3"}
 
 func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableConf) (string, error) {
-	db, err := sql.Open(database.Driver, database.User+":"+database.Password+"@/"+database.Name)
+	db, err := sql.Open(database.Driver, database.dataSource)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -59,7 +61,17 @@ func Create(conf *DatabaseConf) *Database {
 	db.User = conf.User
 	db.Password = conf.Password
 	db.Name = conf.Name
+	db.Path = conf.Path
 
+	var dataSource string 
+	if db.Driver == "sqlite3"{
+		dataSource = db.Path
+	} else {
+		dataSource = db.User+":"+db.Password+"@/"+db.Name
+	}
+	db.dataSource = dataSource
+
+	log.Printf("Preparing connection with '%s' driver to %s\n", db.Driver, db.dataSource)
 	return db
 }
 

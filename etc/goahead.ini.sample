@@ -6,6 +6,7 @@ driver = mysql
 user = root
 password = abc123
 name = zocprint
+;path = zocprint.bd
 
 [table]
 url = url
