@@ -39,6 +39,15 @@ func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableCo
 
 func (database *Database) IsValid() error{
 	var isOk = false
+	db, err := sql.Open(database.Driver, database.dataSource)
+	if err != nil {
+		return err 
+	}
+	defer db.Close()
+	err = db.Ping() 
+	if err != nil {
+		return err 
+	}
 
 	for _, driver:= range drivers{
 		if database.Driver == driver {
@@ -53,7 +62,6 @@ func (database *Database) IsValid() error{
 
 	return nil 
 }
-
 
 func Create(conf *DatabaseConf) *Database {
 	db := new(Database)
