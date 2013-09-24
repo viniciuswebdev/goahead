@@ -1,10 +1,12 @@
 [general]
 port = 9000 
 
-[mysql]
+[database]
+driver = mysql
 user = root
 password = abc123
-database = zocprint
+name = zocprint
+;path = zocprint.bd
 
 [table]
 url = url
