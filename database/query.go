@@ -3,6 +3,9 @@ package database
 import (
 	"errors"
 	"database/sql"
+	"github.com/pmylund/go-cache"
+	"time"
+	"fmt"
 )
 
 type TableConf struct {
@@ -16,10 +19,19 @@ func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableCo
 	}
 	defer db.Close()
 
+	c := cache.New(15*time.Minute, 30*time.Second)
+	cachedUrl, found := c.Get(tableConf.Hash)
+	if found {
+        return cachedUrl.(string), nil
+	}
+
 	var url string
-	err = db.QueryRow("SELECT " + tableConf.Url + " FROM " + tableConf.Name + " WHERE " + tableConf.Hash + " = $1 ", hash).Scan(&url)
+	err = db.QueryRow(fmt.Sprintf("SELECT %s FROM %s WHERE %s = ?", tableConf.Url, tableConf.Name, tableConf.Hash), hash).Scan(&url)
 	if err != nil {
 		return url, err
+	}
+	if len(url) != 0 {
+		c.Set(tableConf.Hash, url, 0)
 	}
 	return url, nil
 }
