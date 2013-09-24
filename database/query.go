@@ -26,7 +26,7 @@ func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableCo
 	}
 
 	var url string
-	err = db.QueryRow(fmt.Sprintf("SELECT %s FROM %s WHERE %s = ?", tableConf.Url, tableConf.Name, tableConf.Hash), hash).Scan(&url)
+	err = db.QueryRow(fmt.Sprintf("SELECT %s FROM %s WHERE %s = $1", tableConf.Url, tableConf.Name, tableConf.Hash), hash).Scan(&url)
 	if err != nil {
 		return url, err
 	}
