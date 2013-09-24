@@ -25,6 +25,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	url, error := _db.FindShortenerUrlByHash(hash, &(_cfg.Table))
 	if error != nil {
+		log.Printf("%s \n", error.Error())
 		http.NotFound(w, r)
 		return
 	}

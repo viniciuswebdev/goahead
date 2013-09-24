@@ -6,6 +6,7 @@ import (
 	"log"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 )
 
 type DatabaseConf struct {
@@ -20,7 +21,7 @@ type TableConf struct {
 	Name, Hash, Url string
 }
 
-var drivers = []string{"mysql", "sqlite3"}
+var drivers = []string{"mysql", "sqlite3", "postgres"}
 
 func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableConf) (string, error) {
 	db, err := sql.Open(database.Driver, database.dataSource)
@@ -30,7 +31,7 @@ func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableCo
 	defer db.Close()
 
 	var url string
-	err = db.QueryRow("SELECT " + tableConf.Url + " FROM " + tableConf.Name + " WHERE " + tableConf.Hash + " = ?", hash).Scan(&url)
+	err = db.QueryRow("SELECT " + tableConf.Url + " FROM " + tableConf.Name + " WHERE " + tableConf.Hash + " = $1 ", hash).Scan(&url)
 	if err != nil {
 		return url, err
 	}
@@ -74,6 +75,8 @@ func Create(conf *DatabaseConf) *Database {
 	var dataSource string 
 	if db.Driver == "sqlite3"{
 		dataSource = db.Path
+	} else if db.Driver == "postgres" {
+		dataSource = "user="+db.User+" password="+db.Password+" dbname="+db.Name
 	} else {
 		dataSource = db.User+":"+db.Password+"@/"+db.Name
 	}
