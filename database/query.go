@@ -18,7 +18,7 @@ func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableCo
 	}
 	defer db.Close()
 
-	c := cache.New(5*time.Minute, 30*time.Second)
+	c := cache.New(15*time.Minute, 30*time.Second)
 	cachedUrl, found := c.Get(tableConf.Hash)
 	if found {
         return cachedUrl.(string), nil
