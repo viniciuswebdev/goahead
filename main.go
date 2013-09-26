@@ -14,6 +14,7 @@ type Config struct {
 	}
 	Mysql database.DatabaseConf
 	Table database.TableConf
+	Cache database.CacheConf
 }
 
 var _cfg Config
@@ -23,7 +24,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Searching url with hash '%s' \n", hash)
 
 	db := database.Create(&(_cfg.Mysql))
-	url, error := db.FindShortenerUrlByHash(hash, &(_cfg.Table))
+	url, error := db.FindShortenerUrlByHash(hash, &(_cfg.Table), &(_cfg.Cache))
 	if error != nil {
 		http.NotFound(w, r)
 		return

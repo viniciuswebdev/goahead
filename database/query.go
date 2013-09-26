@@ -3,22 +3,26 @@ package database
 import (
 	"database/sql"
 	"github.com/pmylund/go-cache"
-	"time"
 	"fmt"
+	"time"
 )
 
 type TableConf struct {
 	Name, Hash, Url string
 }
 
-func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableConf) (string, error) {
+type CacheConf struct {
+	Time int
+}
+
+func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableConf, cacheConf *CacheConf) (string, error) {
 	db, err := sql.Open("mysql", database.User+":"+database.Password+"@/"+database.Database)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
 
-	c := cache.New(15*time.Minute, 30*time.Second)
+	c := cache.New(time.Duration(10 * int(cacheConf.Time)) , 30*time.Second)
 	cachedUrl, found := c.Get(tableConf.Hash)
 	if found {
         return cachedUrl.(string), nil
