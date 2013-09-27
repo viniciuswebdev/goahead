@@ -1,5 +1,7 @@
 [general]
 port = 9000 
+host = localhost
+fastcgi = false
 
 [database]
 driver = mysql; you can use mysql, postgres and sqlite3 
