@@ -32,5 +32,5 @@ Run goahead normally! :)
 
 ### Maintainers
 
-Claudson Oliveira - [github.com/cloudson](github.com/cloudson)  
-Vinicius Oliveira - [github.com/viniciuswebdev](github.com/viniciuswebdev)
+Claudson Oliveira - [github.com/cloudson](http://github.com/cloudson)  
+Vinicius Oliveira - [github.com/viniciuswebdev](http://github.com/viniciuswebdev)
