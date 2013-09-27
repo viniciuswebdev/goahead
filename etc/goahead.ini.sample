@@ -12,3 +12,6 @@ name = zocprint
 url = url
 hash = hash
 name = shortened_url
+
+[cache]
+time = 10

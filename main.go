@@ -14,6 +14,7 @@ type Config struct {
 	}
 	Database database.DatabaseConf
 	Table database.TableConf
+	Cache database.CacheConf
 }
 
 var _cfg Config
@@ -23,7 +24,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	hash := r.URL.Path[1:]
 	log.Printf("Searching url with hash '%s' \n", hash)
 
-	url, error := _db.FindShortenerUrlByHash(hash, &(_cfg.Table))
+	url, error := _db.FindShortenerUrlByHash(hash, &(_cfg.Table), &(_cfg.Cache))
+
 	if error != nil {
 		log.Printf("%s \n", error.Error())
 		http.NotFound(w, r)
