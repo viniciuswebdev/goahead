@@ -25,8 +25,12 @@ func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableCo
         return cachedUrl.(string), nil
 	}
 
+	database_var := "?"
+	if database.IsPostgres() {
+		database_var = "$"
+	}
 	var url string
-	err = db.QueryRow(fmt.Sprintf("SELECT %s FROM %s WHERE %s = $1", tableConf.Url, tableConf.Name, tableConf.Hash), hash).Scan(&url)
+	err = db.QueryRow(fmt.Sprintf("SELECT %s FROM %s WHERE %s = %s", tableConf.Url, tableConf.Name, tableConf.Hash, database_var), hash).Scan(&url)
 	if err != nil {
 		return url, err
 	}

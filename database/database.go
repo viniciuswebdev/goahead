@@ -38,3 +38,14 @@ func Create(conf *DatabaseConf) *Database {
 	return db
 }
 
+func (database *Database) IsPostgres() bool {
+	return database.Driver == "postgres"
+}
+
+func (database *Database) IsSqlite3() bool {
+	return database.Driver == "sqlite3"
+}
+
+func (database *Database) IsMysql() bool {
+	return database.Driver == "mysql"
+}
