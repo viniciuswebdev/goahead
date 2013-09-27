@@ -12,7 +12,7 @@ type TableConf struct {
 	Name, Hash, Url string
 }
 
-func (database *Database) FindShortenerUrlByHash(hash string, tableConf *TableConf) (string, error) {
+func (database *Database) FindShortenedUrlByHash(hash string, tableConf *TableConf) (string, error) {
 	db, err := sql.Open(database.Driver, database.dataSource)
 	if err != nil {
 		panic(err.Error())

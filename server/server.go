@@ -33,7 +33,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
     hash := r.URL.Path[1:]
     log.Printf("Searching url with hash '%s' \n", hash)
 
-    url, error := _db.FindShortenerUrlByHash(hash, _table)
+    url, error := _db.FindShortenedUrlByHash(hash, _table)
     if error != nil {
         log.Printf("%s \n", error.Error())
         http.NotFound(w, r)
