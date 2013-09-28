@@ -16,10 +16,12 @@ type Server struct {
 
 var _db *database.Database
 var _table *database.TableConf
+var _cache *database.CacheConf 
 
-func (server *Server) initialize(db *database.Database, table *database.TableConf) {
+func (server *Server) initialize(db *database.Database, table *database.TableConf, cache *database.CacheConf) {
     _db = db 
     _table = table
+    _cache = cache
     if server.Port == "" {
         server.Port = "9000"
     }
@@ -33,7 +35,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
     hash := r.URL.Path[1:]
     log.Printf("Searching url with hash '%s' \n", hash)
 
-    url, error := _db.FindShortenedUrlByHash(hash, _table)
+    url, error := _db.FindShortenedUrlByHash(hash, _table, _cache)
     if error != nil {
         log.Printf("%s \n", error.Error())
         http.NotFound(w, r)
@@ -46,8 +48,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     handler(w, r)   
 }
 
-func (s *Server) TurnOn(db *database.Database, table *database.TableConf) {
-    s.initialize(db, table)
+func (s *Server) TurnOn(db *database.Database, table *database.TableConf, cache *database.CacheConf) {
+    s.initialize(db, table, cache)
     if s.FastCgi {
         log.Printf("Starting Goahead on %s:%s using fastcgi...\n", s.Host, s.Port)
         s.turnOnFastCGI()

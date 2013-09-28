@@ -11,6 +11,7 @@ type Config struct {
 	General server.Server
 	Database database.DatabaseConf
 	Table database.TableConf
+	Cache database.CacheConf
 }
 
 var _cfg Config
@@ -27,5 +28,5 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	_cfg.General.TurnOn(db, &(_cfg.Table))
+	_cfg.General.TurnOn(db, &(_cfg.Table), &(_cfg.Cache))
 }
