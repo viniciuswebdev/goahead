@@ -39,29 +39,3 @@ func (database *Database) FindShortenedUrlByHash(hash string, tableConf *TableCo
 	}
 	return url, nil
 }
-
-func (database *Database) IsValid() error{
-	var isOk = false
-	db, err := sql.Open(database.Driver, database.dataSource)
-	if err != nil {
-		return err 
-	}
-	defer db.Close()
-	err = db.Ping() 
-	if err != nil {
-		return err 
-	}
-
-	for _, driver:= range drivers{
-		if database.Driver == driver {
-			isOk = true 
-			break
-		}
-	}
-
-	if !isOk {
-		return errors.New("Driver "+database.Driver+" is not supported.")
-	}
-
-	return nil 
-}
