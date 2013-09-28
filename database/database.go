@@ -1,6 +1,8 @@
 package database
 
 import (
+	"database/sql"
+	"errors"
 	"log"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
@@ -38,3 +40,40 @@ func Create(conf *DatabaseConf) *Database {
 	return db
 }
 
+func (database *Database) IsValid() error{
+	var isOk = false
+	db, err := sql.Open(database.Driver, database.dataSource)
+	if err != nil {
+		return err 
+	}
+	defer db.Close()
+	err = db.Ping() 
+	if err != nil {
+		return err 
+	}
+
+	for _, driver:= range drivers{
+		if database.Driver == driver {
+			isOk = true 
+			break
+		}
+	}
+
+	if !isOk {
+		return errors.New("Driver "+database.Driver+" is not supported.")
+	}
+
+	return nil 
+}
+
+func (database *Database) IsPostgres() bool {
+	return database.Driver == "postgres"
+}
+
+func (database *Database) IsSqlite3() bool {
+	return database.Driver == "sqlite3"
+}
+
+func (database *Database) IsMysql() bool {
+	return database.Driver == "mysql"
+}

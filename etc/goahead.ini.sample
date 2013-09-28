@@ -1,12 +1,14 @@
 [general]
 port = 9000 
+host = localhost
+fastcgi = false
 
 [database]
-driver = mysql
+driver = mysql; you can use mysql, postgres and sqlite3 
 user = root
 password = abc123
 name = zocprint
-;path = zocprint.bd
+;path = zocprint.bd ; use it with sqlite3
 
 [table]
 url = url
