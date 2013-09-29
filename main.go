@@ -3,6 +3,7 @@ package main
 import (
 	"code.google.com/p/gcfg"
 	"flag"
+	"log"
 	"github.com/viniciuswebdev/goahead/database"
 	"github.com/viniciuswebdev/goahead/server"
 )
@@ -21,12 +22,12 @@ func main() {
 
 	err := gcfg.ReadFileInto(&_cfg, *configFilePath)
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
 	}
 	db := database.Create(&(_cfg.Database))
 	err = db.IsValid() 
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
 	}
 	_cfg.General.TurnOn(db, &(_cfg.Table), &(_cfg.Cache))
 }
