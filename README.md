@@ -10,7 +10,7 @@ code.google.com/p/gcfg
 ### Usage
 Copy the etc/goahead.ini.sample to etc/goahead.ini, edit it to use your database and persons informations.  
 1. Compile gohead with `go build`.  
-2. Run it with `goahead` 
+2. Run it with `goahead -run` 
 
 #### FastCGI (optional)
 At first enable fastcgi for true in goahead.ini. So, write the rule at /etc/nginx/sites-enabled/redir-go.dev.conf:
