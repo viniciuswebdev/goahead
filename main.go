@@ -42,7 +42,7 @@ func main() {
 	}
 
 	if *build {
-		buildScaffold(&_cfg)
+		buildScaffold(db)
 		return
 	}
 
@@ -66,8 +66,9 @@ func showHelp() {
 	fmt.Println("Visit http://github.com/viniciuswebdev/goahead for many informations")
 }
 
-func buildScaffold(config *Config) {
+func buildScaffold(db *database.Database) {
 	fmt.Println("Creating the scaffold...")
+	db.CreateTables(&(_cfg.Table))
 }
 
 func runServer(db *database.Database) {

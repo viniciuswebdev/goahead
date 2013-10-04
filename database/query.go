@@ -42,3 +42,33 @@ func (database *Database) FindShortenedUrlByHash(hash string, tableConf *TableCo
 	}
 	return url, nil
 }
+
+func (database *Database) CreateTables(tableConf *TableConf) {
+	db, err := sql.Open(database.Driver, database.dataSource)
+	if err != nil {
+		panic(err)
+	}
+	var result sql.Result
+
+	var rowsAffected int64
+	query  := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (id INT PRIMARY KEY, %s varchar(255), %s varchar(255), created_at datatime DEFAULT CURRENT_TIMESTAMP, updated_at datetime DEFAULT CURRENT_TIMESTAMP)", tableConf.Name, tableConf.Hash, tableConf.Url)
+	result, err =  db.Exec(query)
+	rowsAffected, _ = result.RowsAffected()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("create table '%s' \n", tableConf.Name)
+
+	query  = fmt.Sprintf("CREATE TABLE IF NOT EXISTS goahead_statistics (id INT PRIMARY KEY, created_at datetime DEFAULT CURRENT_TIMESTAMP)")
+	result, err =  db.Exec(query)
+
+	if err != nil {
+		panic(err)
+	}
+	rowsAffected, _ = result.RowsAffected()
+	fmt.Printf("create table 'goahead_statistics' \n")
+
+	if rowsAffected == 0 {
+		// bla! 		
+	}
+}
