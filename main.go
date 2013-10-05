@@ -56,12 +56,12 @@ func main() {
 func showHelp() {
 	fmt.Println("Goahead is a simple service that redirects routes\n")
 	fmt.Println("Usage: ")
-	fmt.Println("\t goahead [argument]")
+	fmt.Println("\t goahead [argument [-config filepath with ini configuration]]")
 	fmt.Println("")
 	fmt.Println("The commands are: ")
 	fmt.Println("\t -help      show the help")
 	fmt.Println("\t -build     create the scaffold")
-	fmt.Println("\t -run       [-config filepath with ini configuration]")
+	fmt.Println("\t -run       run server!")
 	fmt.Println("")
 	fmt.Println("Visit http://github.com/viniciuswebdev/goahead for many informations")
 }
