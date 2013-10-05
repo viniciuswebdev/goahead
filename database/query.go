@@ -30,10 +30,10 @@ func (database *Database) FindShortenedUrlByHash(hash string, tableConf *TableCo
 
 	database_var := "?"
 	if database.IsPostgres() {
-		database_var = "$"
+		database_var = "$1"
 	}
 	var url string
-	err = db.QueryRow(fmt.Sprintf("SELECT %s FROM %s WHERE %s = %s", tableConf.Url, tableConf.Name, tableConf.Hash, database_var), hash).Scan(&url)
+	err = db.QueryRow(fmt.Sprintf(" SELECT %s FROM %s WHERE %s = %s ", tableConf.Url, tableConf.Name, tableConf.Hash, database_var), hash).Scan(&url)
 	if err != nil {
 		return url, err
 	}
@@ -50,25 +50,23 @@ func (database *Database) CreateTables(tableConf *TableConf) {
 	}
 	var result sql.Result
 
-	var rowsAffected int64
-	query  := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (id INT PRIMARY KEY, %s varchar(255), %s varchar(255), created_at datatime DEFAULT CURRENT_TIMESTAMP, updated_at datetime DEFAULT CURRENT_TIMESTAMP)", tableConf.Name, tableConf.Hash, tableConf.Url)
+	var auto_increment_syntax = "INT AUTO INCREMENT "
+	if database.IsPostgres() {
+		auto_increment_syntax = "SERIAL "
+	}
+	fmt.Printf("creating table '%s'... \n", tableConf.Name)
+	query  := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (id %s PRIMARY KEY, %s varchar(255), %s varchar(255), created_at timestamp DEFAULT CURRENT_TIMESTAMP, updated_at timestamp DEFAULT CURRENT_TIMESTAMP)", tableConf.Name, auto_increment_syntax, tableConf.Hash, tableConf.Url)
 	result, err =  db.Exec(query)
-	rowsAffected, _ = result.RowsAffected()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("create table '%s' \n", tableConf.Name)
-
-	query  = fmt.Sprintf("CREATE TABLE IF NOT EXISTS goahead_statistics (id INT PRIMARY KEY, created_at datetime DEFAULT CURRENT_TIMESTAMP)")
+	result.RowsAffected()
+	
+	fmt.Printf("creating table 'goahead_statistics'... \n")
+	query  = fmt.Sprintf("CREATE TABLE IF NOT EXISTS goahead_statistics (id %s PRIMARY KEY, created_at timestamp DEFAULT CURRENT_TIMESTAMP)", auto_increment_syntax)
 	result, err =  db.Exec(query)
-
 	if err != nil {
 		panic(err)
 	}
-	rowsAffected, _ = result.RowsAffected()
-	fmt.Printf("create table 'goahead_statistics' \n")
-
-	if rowsAffected == 0 {
-		// bla! 		
-	}
+	result.RowsAffected()
 }
