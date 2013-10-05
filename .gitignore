@@ -1,1 +1,3 @@
-etc/goahead.ini
+etc/*.ini
+*sublime*
+goahead
