@@ -4,15 +4,17 @@ GoAhead
 GoAhead is a simple service that redirects routes (in development)
 ### Dependencies 
 golang >= 1.1   
-code.google.com/p/gcfg
 
 
 ### Usage
-Copy the etc/goahead.ini.sample to etc/goahead.ini, edit it to use your database and persons informations.  
-1. Compile gohead with `go build`.  
-2. Run it with `goahead -run` 
+Copy the etc/goahead.ini.sample to etc/goahead.ini, edit it to use your database and persons informations.     
+Get dependencies with `go get` at the goahead folder.  
+Compile gohead with `go build`.
 
-#### FastCGI (optional)
+#### Do you not have the redirect table? (optional)
+Use our scaffold command running `goahead -build`. 
+
+#### Do you need the FastCGI support? (optional)
 At first enable fastcgi for true in goahead.ini. So, write the rule at /etc/nginx/sites-enabled/redir-go.dev.conf:
 
 ```
@@ -26,9 +28,14 @@ server {
         fastcgi_pass 127.0.0.1:9000;
     }
 }
+``` 
 
-```
-Run goahead normally! :) 
+#### Go ahead!!!
+Run it with `goahead -run`
+
+#### Questions? 
+`goahead -help` 
+
 
 ### Maintainers
 
